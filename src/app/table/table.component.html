@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+     {{tableName}}
+     <!-- <angular2csv [data]="data" filename="test.csv" [options]="options"></angular2csv> -->
+
+    </div>
+    <div class="col-md-12 table-name">
+        <table class="table table-hover">
+            <thead>
+              <tr>
+                
+                <th  *ngFor="let col of columns"><a><span (click)="sortData(col,'true')"><i  [ngClass]="{ 'fa fa-arrow-up':sort.column === col.col && !sort.descending , 'fa fa-arrow-down':sort.column === col.col && sort.descending}" ></i>{{col.colname}}</span><input type="checkbox" [(ngModel)]="col.ischecked" (change)="checkValue(col)" /></a>
+                <!-- {{sort.column}}{{col.col}} {{sort.descending}}</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of rows">
+                <th >{{item.desert}}</th>
+                <td>{{item.calories}}</td>
+                <td>{{item.fat}}</td>
+                <td>{{item.carbs}}</td>
+                <td>{{item.protein}}</td>
+              </tr>
+              
+            </tbody>
+          </table>
+    </div>
+  </div>
+  <div class="row pagination-bar" >
+    <div class="col-md-12">
+        <label>No Per Page</label>
+        <select class='select-option' required [(ngModel)]='pageDetails.noPerPage' (ngModelChange)='onOptionsSelected($event)'>
+            <option class='option' *ngFor='let option of noarray' [value]="option">{{option}}</option>
+        </select>
+
+    </div>
+  </div>
+
+
+  </div>
