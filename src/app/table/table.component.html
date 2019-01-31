@@ -10,14 +10,14 @@
             <thead>
               <tr>
                 
-                <th  *ngFor="let col of columns"><a><span (click)="sortData(col,'true')"><i  [ngClass]="{ 'fa fa-arrow-up':sort.column === col.col && !sort.descending , 'fa fa-arrow-down':sort.column === col.col && sort.descending}" ></i>{{col.colname}}</span><input type="checkbox" [(ngModel)]="col.ischecked" (change)="checkValue(col)" /></a>
+                <th  *ngFor="let col of columns" [hidden]="!col.ischecked"><a><span (click)="sortData(col,'true')"><i  [ngClass]="{ 'fa fa-arrow-up':sort.column === col.col && !sort.descending , 'fa fa-arrow-down':sort.column === col.col && sort.descending}" ></i>{{col.colname}}</span><input type="checkbox" [(ngModel)]="col.ischecked" (change)="checkValue(col)" /></a>
                 <!-- {{sort.column}}{{col.col}} {{sort.descending}}</th> -->
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of rows">
+              <tr *ngFor="let item of newRows">
                 <th >{{item.desert}}</th>
-                <td>{{item.calories}}</td>
+                <td >{{item.calories}}</td>
                 <td>{{item.fat}}</td>
                 <td>{{item.carbs}}</td>
                 <td>{{item.protein}}</td>
@@ -37,9 +37,9 @@
         <div class="col-md-4">
      
             <div class="pagination">
-                <p>{{firstPage+1}} - {{lastpage}} of {{pageDetails.totalcount}}</p>
-                <a href="#">❮</a>
-                <a href="#">❯</a>
+                <span >{{firstPage+1}} - {{lastpage}} of {{pageDetails.totalcount}}</span>
+                <a (click)="prev()"href="#">❮</a>
+                <a (click)="next()">❯</a>
               </div>
         </div>
 

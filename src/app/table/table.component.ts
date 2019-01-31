@@ -13,7 +13,8 @@ export class TableComponent implements OnInit {
   keys = [];
   isDesc = false;
   firstPage: any;
-  lastpage: any="";
+  lastpage: any = "";
+  newRows = [];
 
   // download csv
   options = {
@@ -37,7 +38,7 @@ export class TableComponent implements OnInit {
     noPerPage: this.noPerPage,
     totalcount: null,
   }
-  noarray = [5, 10, 15]
+  noarray = []
 
   public sort: any = {
     column: "",//to match the variable of one of the columns
@@ -53,7 +54,8 @@ export class TableComponent implements OnInit {
     this.keys = this.columns.map(a => a.col)
     // this.sortData(this.columns[0], 'false')
     this.firstPage = 1;
-
+    this.pageDetails.totalcount = this.rows.length;
+    this.findMultipleofCount(this.pageDetails.totalcount);
     this.getIndexDetail(1);
     this.pageDetails.noPerPage = this.noarray[0];
 
@@ -62,15 +64,29 @@ export class TableComponent implements OnInit {
   }
 
 
-  getIndexDetail(page_no) {
-    this.pageDetails.totalcount = this.rows.length;
-  
-    var length = this.pageDetails.noPerPage;
-    this.firstPage= page_no * length - length;
-    this.lastpage=page_no * length;
-    this.rows=  this.rows.slice(this.firstPage,this.lastpage)
+  findMultipleofCount(count){
+    var total = 0;
+    for (var i = 0; i <=count; i++)
+    {  
+        if ( i % 5 === 0 && i!=0)
+        { 
+          this.noarray.push(i);
+        }
+    }
 
-    console.log(this.pageDetails);
+   console.log(this.noarray);
+  }
+
+
+  getIndexDetail(page_no) {
+   
+    var length = this.pageDetails.noPerPage;
+    this.firstPage = page_no * length - length;
+    this.lastpage = page_no * length;
+    console.log(this.firstPage, this.lastpage)
+    this.newRows = this.rows.slice(this.firstPage, this.lastpage);
+    console.log(this.rows)
+    // console.log(this.pageDetails);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -117,9 +133,24 @@ export class TableComponent implements OnInit {
     col.ischecked = !col.ischecked;
   }
   onOptionsSelected(event) {
-    this.pageDetails.noPerPage = event;
+    console.log(event);
+    this.pageDetails.noPerPage = parseInt(event);
     this.getIndexDetail(this.pageDetails.page_no);
   }
+  prev(){
+    if(this.firstPage>=1){
+    this.pageDetails.page_no-=1;
+    this.getIndexDetail( this.pageDetails.page_no);
+    }
+  }
+  next(){
+    if(this.lastpage<this.pageDetails.totalcount){
+      this.pageDetails.page_no+=1;
+      this.getIndexDetail( this.pageDetails.page_no);
+    }
+   
+  }
+
   setpagination(totalcount, page_no) {
     if (totalcount !== this.rows.length) {
 
