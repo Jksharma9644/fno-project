@@ -12,6 +12,8 @@ export class TableComponent implements OnInit {
   @Input() rows: any;
   keys = [];
   isDesc = false;
+  firstPage: any;
+  lastpage: any="";
 
   // download csv
   options = {
@@ -33,7 +35,7 @@ export class TableComponent implements OnInit {
   pageDetails = {
     page_no: 1,
     noPerPage: this.noPerPage,
-    totalcount: null
+    totalcount: null,
   }
   noarray = [5, 10, 15]
 
@@ -49,12 +51,26 @@ export class TableComponent implements OnInit {
       descending: true
     };
     this.keys = this.columns.map(a => a.col)
+    // this.sortData(this.columns[0], 'false')
+    this.firstPage = 1;
+
+    this.getIndexDetail(1);
+    this.pageDetails.noPerPage = this.noarray[0];
+
+
+
+  }
+
+
+  getIndexDetail(page_no) {
     this.pageDetails.totalcount = this.rows.length;
-    this.pageDetails.noPerPage=this.noarray[0];
+  
+    var length = this.pageDetails.noPerPage;
+    this.firstPage= page_no * length - length;
+    this.lastpage=page_no * length;
+    this.rows=  this.rows.slice(this.firstPage,this.lastpage)
+
     console.log(this.pageDetails);
-
-
-    this.sortData(this.columns[0], 'false')
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -100,8 +116,17 @@ export class TableComponent implements OnInit {
   checkValue(col) {
     col.ischecked = !col.ischecked;
   }
-  onOptionsSelected(event){
-this.pageDetails.noPerPage=event;
+  onOptionsSelected(event) {
+    this.pageDetails.noPerPage = event;
+    this.getIndexDetail(this.pageDetails.page_no);
+  }
+  setpagination(totalcount, page_no) {
+    if (totalcount !== this.rows.length) {
+
+
+    }
+
+
   }
 
 }

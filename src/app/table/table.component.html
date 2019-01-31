@@ -28,14 +28,21 @@
     </div>
   </div>
   <div class="row pagination-bar" >
-    <div class="col-md-12">
+    <div class="col-md-4">
         <label>No Per Page</label>
         <select class='select-option' required [(ngModel)]='pageDetails.noPerPage' (ngModelChange)='onOptionsSelected($event)'>
             <option class='option' *ngFor='let option of noarray' [value]="option">{{option}}</option>
         </select>
+    </div>
+        <div class="col-md-4">
+     
+            <div class="pagination">
+                <p>{{firstPage+1}} - {{lastpage}} of {{pageDetails.totalcount}}</p>
+                <a href="#">❮</a>
+                <a href="#">❯</a>
+              </div>
+        </div>
 
     </div>
   </div>
 
-
-  </div>
