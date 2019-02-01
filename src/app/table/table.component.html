@@ -1,13 +1,22 @@
 <div class="container">
-  <div class="row">
+  <div class="row" style="margin:15px 0;border-top: 1px solid #ddd;">
     <div class="col-md-12">
-     {{tableName}}
+      <div class="text-parent">
+        <div class="text-child">
+            {{tableName}}
+            <button style="float:right"(click)="exportTableToCSV('members.csv')"><i class="fa fa-download" style="font-size:24px"></i></button>
+        </div>
+               
+
+      </div>
+   
      <!-- <angular2csv [data]="rows" filename="test.csv" [options]="options"></angular2csv> -->
-     <button (click)="exportTableToCSV('members.csv')"><i class="fa fa-download" style="font-size:24px"></i></button>
+   
+   
      <!-- <span><i class="fa fa-download" style="font-size:24px"></i></span> -->
     </div>
     <div class="col-md-12 table-name">
-        <table class="table table-hover">
+        <table class="table table-hover" style="margin-top: -50px">
             <!-- <thead> -->
               <tr>
                 
@@ -29,13 +38,14 @@
     </div>
   </div>
   <div class="row pagination-bar" >
-    <div class="col-md-4">
+      <div class="col-md-4"></div>
+    <div class="col-md-4 pad-top-btm-10">
         <label>No Per Page</label>
         <select class='select-option' required [(ngModel)]='pageDetails.noPerPage' (ngModelChange)='onOptionsSelected($event)'>
             <option class='option' *ngFor='let option of noarray' [value]="option">{{option}}</option>
         </select>
     </div>
-        <div class="col-md-4">
+        <div class="col-md-4  pad-top-btm-10">
      
             <div class="pagination">
                 <span >{{firstPage+1}} - {{lastpage}} of {{pageDetails.totalcount}}</span>
