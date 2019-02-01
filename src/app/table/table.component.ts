@@ -51,7 +51,19 @@ export class TableComponent implements OnInit {
       column: this.columns[0].col, //to match the variable of one of the columns
       descending: true
     };
-    this.keys = this.columns.map(a => a.col)
+    this.keys = this.columns.map(a => a.col);
+    this.options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: false,
+      headers: [],
+      showTitle: true,
+      title: 'asfasf',
+      useBom: false,
+      removeNewLines: true,
+      keys: this.keys
+    };
     // this.sortData(this.columns[0], 'false')
     this.firstPage = 1;
     this.pageDetails.totalcount = this.rows.length;
@@ -64,22 +76,20 @@ export class TableComponent implements OnInit {
   }
 
 
-  findMultipleofCount(count){
+  findMultipleofCount(count) {
     var total = 0;
-    for (var i = 0; i <=count; i++)
-    {  
-        if ( i % 5 === 0 && i!=0)
-        { 
-          this.noarray.push(i);
-        }
+    for (var i = 0; i <= count; i++) {
+      if (i % 5 === 0 && i != 0) {
+        this.noarray.push(i);
+      }
     }
 
-   console.log(this.noarray);
+    console.log(this.noarray);
   }
 
 
   getIndexDetail(page_no) {
-   
+
     var length = this.pageDetails.noPerPage;
     this.firstPage = page_no * length - length;
     this.lastpage = page_no * length;
@@ -137,18 +147,18 @@ export class TableComponent implements OnInit {
     this.pageDetails.noPerPage = parseInt(event);
     this.getIndexDetail(this.pageDetails.page_no);
   }
-  prev(){
-    if(this.firstPage>=1){
-    this.pageDetails.page_no-=1;
-    this.getIndexDetail( this.pageDetails.page_no);
+  prev() {
+    if (this.firstPage >= 1) {
+      this.pageDetails.page_no -= 1;
+      this.getIndexDetail(this.pageDetails.page_no);
     }
   }
-  next(){
-    if(this.lastpage<this.pageDetails.totalcount){
-      this.pageDetails.page_no+=1;
-      this.getIndexDetail( this.pageDetails.page_no);
+  next() {
+    if (this.lastpage < this.pageDetails.totalcount) {
+      this.pageDetails.page_no += 1;
+      this.getIndexDetail(this.pageDetails.page_no);
     }
-   
+
   }
 
   setpagination(totalcount, page_no) {
@@ -157,7 +167,33 @@ export class TableComponent implements OnInit {
 
     }
 
-
+  }
+  downloadCSV(csv, filename) {
+    var csvFile;
+    var downloadLink;
+    csvFile = new Blob([csv], { type: "text/csv" });
+    downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
   }
 
-}
+  exportTableToCSV(filename) {
+    var csv = [];
+    var rows = document.querySelectorAll("table tr");
+    for (var i = 0; i < rows.length; i++) {
+      var row = [];
+      var cols = rows[i].querySelectorAll("td, th");
+      for (var j = 0; j < cols.length; j++) {
+        row.push(cols[j].textContent);
+
+      }
+      this.downloadCSV(csv.join("\n"), filename);
+
+    }
+
+
+
+  }
