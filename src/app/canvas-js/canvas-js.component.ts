@@ -9,31 +9,35 @@ export class CanvasJsComponent implements OnInit {
   @ViewChild('canvas') public canvas: ElementRef;
   private cx: CanvasRenderingContext2D;
   constructor() { }
+  CanvasChart: any;
+  dataDef: any;
+  ptX: any;
+  ptY: any;
+  prevX: any;
+  prevY: any;
+
 
   ngOnInit() {
+    this.getRandomInt();
 
-    var CanvasChart = this.getChartConfig();
-    var dataDef = {
-      title: "US Population Chart",
-      xLabel: 'Year',
-      yLabel: 'Population (millions)',
-      labelFont: '19pt Arial',
-      dataPointFont: '10pt Arial',
-      renderTypes: [CanvasChart.renderType.lines, CanvasChart.renderType.points],
-      dataPoints: [{ x: '1790', y: 3.9 },
-      { x: '1810', y: 7.2 },
-      { x: '1830', y: 12.8 },
-      { x: '1850', y: 23.1 },
-      { x: '1870', y: 36.5 },
-      { x: '1890', y: 62.9 },
-      { x: '1910', y: 92.2 },
-      { x: '1930', y: 123.2 },
-      { x: '1950', y: 151.3 },
-      { x: '1970', y: 203.2 },
-      { x: '1990', y: 248.7 },
-      { x: '2010', y: 308.7 }]
+
+    this.CanvasChart = this.getChartConfig();
+    this.dataDef = {
+      title: "Time Series Graph",
+      xLabel: 'Time ',
+      yLabel: 'Value',
+      renderTypes: [this.CanvasChart.renderType.lines],
+      dataPoints: [{ x: '1', y: 0 }, { x: 2, y: 82 },
+      { x: '3', y: 85 },
+      { x: '4', y: 92 },
+      { x: '5', y: 80 },
+      { x: '6', y: 96 },
+      { x: '7', y: 81 },
+      { x: '8', y: 93 },
+      { x: '9', y: 100 },
+      { x: '10', y: 89 }]
     };
-    CanvasChart.render(this.canvas, dataDef);
+    this.CanvasChart.render(this.canvas, this.dataDef);
   }
 
   getChartConfig() {
@@ -42,30 +46,32 @@ export class CanvasJsComponent implements OnInit {
     var chartHeight, chartWidth, yMax, xMax, data;
     var maxYValue = 0;
     var ratio = 0;
-    var renderType = { lines: 'lines', points: 'points' };
+    var renderType = { lines: 'lines' };
 
     var render = function (canvasId, dataObj) {
       data = dataObj;
       getMaxDataYValue();
-      console.log(canvasId.nativeElement);
+
       this.canvasEl = canvasId.nativeElement;
       this.cx = this.canvasEl.getContext('2d');
-      this.canvasEl.width = 500;
-      this.canvasEl.height = 400;
-      chartHeight =  this.canvasEl.height;
-      chartWidth =  this.canvasEl.width;
+      this.canvasEl.width = 600;
+      this.canvasEl.height = 500;
+      chartHeight = this.canvasEl.height;
+      chartWidth = this.canvasEl.width;
       xMax = chartWidth - (margin.left + margin.right);
       yMax = chartHeight - (margin.top + margin.bottom);
+      // console.log(maxYValue);
       ratio = yMax / maxYValue;
       this.canvasEl = canvasId.nativeElement;
       ctx = this.canvasEl.getContext('2d');
       renderChart();
     };
 
-    var renderChart = function () {
+    var renderChart = () => {
       renderBackground();
       renderText();
       renderLinesAndLabels();
+      // this.getRandomInt();
 
       //render data based upon type of renderType(s) that client supplies
       if (data.renderTypes == undefined || data.renderTypes == null) data.renderTypes = [renderType.lines];
@@ -81,12 +87,12 @@ export class CanvasJsComponent implements OnInit {
     };
 
     var renderBackground = function () {
-      var lingrad = ctx.createLinearGradient(margin.left, margin.top, xMax - margin.right, yMax);
-      lingrad.addColorStop(0.0, '#D4D4D4');
-      lingrad.addColorStop(0.2, '#fff');
-      lingrad.addColorStop(0.8, '#fff');
-      lingrad.addColorStop(1, '#D4D4D4');
-      ctx.fillStyle = lingrad;
+      // var lingrad = ctx.createLinearGradient(margin.left, margin.top, xMax - margin.right, yMax);
+      // lingrad.addColorStop(0.0, '#D4D4D4');
+      // lingrad.addColorStop(0.2, '#fff');
+      // lingrad.addColorStop(0.8, '#fff');
+      // lingrad.addColorStop(1, '#D4D4D4');
+      // ctx.fillStyle = lingrad;
       ctx.fillRect(margin.left, margin.top, xMax - margin.left, yMax - margin.top);
       ctx.fillStyle = 'black';
     };
@@ -121,30 +127,29 @@ export class CanvasJsComponent implements OnInit {
       var xPos = margin.left;
       for (var i = 0; i < data.dataPoints.length; i++) {
         yPos += (i == 0) ? margin.top : yInc;
-        //Draw horizontal lines
-        drawLine(margin.left, yPos, xMax, yPos, '#E8E8E8');
-
+        // console.log("pos",yPos)
+        // drawLine(margin.left, yPos, xMax, yPos, '#fff'); 
         //y axis labels
         ctx.font = (data.dataPointFont != null) ? data.dataPointFont : '10pt Calibri';
         var txt = Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio));
         var txtSize = ctx.measureText(txt);
+        // console.log("value",txt);
         ctx.fillText(txt, margin.left - ((txtSize.width >= 14) ? txtSize.width : 10) - 7, yPos + 4);
-
         //x axis labels
         txt = data.dataPoints[i].x;
-        txtSize = ctx.measureText(txt);
+        // txtSize = ctx.measureText(txt);
         ctx.fillText(txt, xPos, yMax + (margin.bottom / 3));
         xPos += xInc;
       }
 
       //Vertical line
-      drawLine(margin.left, margin.top, margin.left, yMax, 'black');
+      // drawLine(margin.left, margin.top, margin.left, yMax, '#fff');
 
       //Horizontal Line
-      drawLine(margin.left, yMax, xMax, yMax, 'black');
+      // drawLine(margin.left, yMax, xMax, yMax, '#fff');
     };
 
-    var renderData = function (type) {
+    var renderData = (type) => {
       var xInc = getXInc();
       var prevX = 0,
         prevY = 0;
@@ -152,39 +157,52 @@ export class CanvasJsComponent implements OnInit {
       for (var i = 0; i < data.dataPoints.length; i++) {
         var pt = data.dataPoints[i];
         var ptY = (maxYValue - pt.y) * ratio;
+        this.ptY = ptY;
         if (ptY < margin.top) ptY = margin.top;
         var ptX = (i * xInc) + margin.left;
+        this.ptX = ptX;
 
-        if (i > 0 && type == renderType.lines) {
+        if (i > 0) {
           //Draw connecting lines
-          drawLine(ptX, ptY, prevX, prevY, 'black', 2);
-        }
-
-        if (type == renderType.points) {
-          var radgrad = ctx.createRadialGradient(ptX, ptY, 8, ptX - 5, ptY - 5, 0);
-          radgrad.addColorStop(0, 'Green');
-          radgrad.addColorStop(0.9, 'White');
-          ctx.beginPath();
-          ctx.fillStyle = radgrad;
-          //Render circle
-          ctx.arc(ptX, ptY, 8, 0, 2 * Math.PI, false)
-          ctx.fill();
-          ctx.lineWidth = 1;
-          ctx.strokeStyle = '#000';
-          ctx.stroke();
-          ctx.closePath();
+          // console.log(ptX, ptY, prevX, prevY);
+          drawLine(ptX, ptY, prevX, prevY, '#fff', 2);
         }
 
         prevX = ptX;
         prevY = ptY;
+        this.prevX = prevX;
+        this.prevY = prevY;
       }
+      getRandomInt();
     };
+
+    var getRandomInt = () => {
+      // var time = 1;
+
+      var length=  this.dataDef.dataPoints.length;
+      console.log(this.dataDef.dataPoints[length-1].x);
+      var time= parseInt(this.dataDef.dataPoints[length-1].x);
+      setInterval(() => {
+        var min = Math.ceil(80);
+        var max = Math.floor(100);
+        console.log();
+        var data = {
+          x: time,
+          y: Math.floor(Math.random() * (max - min + 1)) + min
+        }
+        time = time + 1;
+        this.dataDef.dataPoints.push(data);
+        drawLine(this.ptX, this.ptY, this.prevX,this. prevY, '#fff', 2)
+      })
+    }
 
     var getXInc = function () {
       return Math.round(xMax / data.dataPoints.length) - 1;
     };
 
+
     var drawLine = function (startX?, startY?, endX?, endY?, strokeStyle?, lineWidth?) {
+      console.log(startX);
       if (strokeStyle != null) ctx.strokeStyle = strokeStyle;
       if (lineWidth != null) ctx.lineWidth = lineWidth;
       ctx.beginPath();
@@ -200,5 +218,21 @@ export class CanvasJsComponent implements OnInit {
     };
 
   }
+  getRandomInt() {
+    var time = 1;
+    setInterval(() => {
+      var min = Math.ceil(80);
+      var max = Math.floor(100);
+      console.log();
+      var data = {
+        x: time,
+        y: Math.floor(Math.random() * (max - min + 1)) + min
+      }
+      time = time + 1;
+      this.dataDef.dataPoints.push(data);
+
+    },10000)
+  }
+
 
 }

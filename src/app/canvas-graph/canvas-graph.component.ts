@@ -9,179 +9,142 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 export class CanvasGraphComponent implements OnInit {
   @ViewChild('canvas') public canvas: ElementRef;
   private cx: CanvasRenderingContext2D;
-  price=20;
-  canvasEl:HTMLCanvasElement;
-  public myVinyls = {
-    "Classical music": 10,
-    "Alternative rock": 14,
-    "Pop": 2,
-    "Jazz": 12
-  };
+  price = 20;
+  canvasEl: HTMLCanvasElement;
+
+  data = {
+    title: "Time Series Graph",
+    xLabel: 'Time in Secs',
+    yLabel: 'Value',
+    dataPoints: [{ x: '1', y: 90 }, { x: '2', y: 82 },
+    { x: '3', y: 100 },
+    { x: '4', y: 95 },
+    { x: '5', y: 94 },
+    { x: '6', y: 85 },
+    { x: '7', y: 92.2 },
+    { x: '8', y: 86.5 },
+    { x: '9', y: 89.2 },
+    { x: '9', y: 81 },
+    { x: '10', y: 93.1 },
+    { x: '11', y: 92 }]
+
+  }
+
 
   constructor() { }
 
   ngOnInit() {
-    this.price=200;
+    this.price = 200;
   }
 
-
-  updatePrice() {
-    setInterval(()=>{
-      var flip = Math.random();
-      // console.log(flip);
-      if (flip > 0.5) {
-        this.price = this.price * 1.1;
-      }
-      else {
-        this.price = this.price * 0.9;
-      }
-     
-     
-      var t=10;
-      var oldPrice;
-      if(!oldPrice)
-      oldPrice = this.price; 
-      this.cx.save();
-      this.cx.beginPath();
-      this.cx.moveTo(t,400-oldPrice);;
-      this.cx.lineTo(t+10, 400-this.price); 
-      this.cx.stroke();
-      this.cx.closePath(); 
-      this.cx.restore();
-      t = t+1;
-      oldPrice = this.price; 
-      // console.log(oldPrice,this.price);
-      
-    },1000)
-   ;
-   
-    // var timer= setInterval(this.updatePrice, 10); 
-  }
-
-
-  ngAfterViewInit(): void {
+  ngAfterViewInit() {
+    var margin = { top: 40, left: 75, right: 0, bottom: 75 };
+    var chartHeight, chartWidth, yMax, xMax, data;
+    var maxYValue = 0;
+    var ratio = 0;
     this.canvasEl = this.canvas.nativeElement;
     this.cx = this.canvasEl.getContext('2d');
-    this.canvasEl.width = 500;
-    this.canvasEl.height = 400;
-    this.cx.fillStyle="white";
-    this.cx.fillRect(0, 0, 500, 400); 
-    this.cx.strokeStyle="red";
-    this.updatePrice();
-    // const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    // this.cx = canvasEl.getContext('2d');
-    // canvasEl.width = 400;
-    // canvasEl.height = 400;
-    // this.cx.fillStyle="black";
-    // this.cx.fillRect(0, 0, 600, 300); 
-    // this.cx.strokeStyle="white";
-    // var t=0;
-    // var oldPrice = this.price; 
-    // this.cx.beginPath();
-    // this.cx.moveTo(t, oldPrice);;
-    // this.cx.lineTo(t+1, this.price); 
-    // this.cx.stroke();
-    // this.cx.closePath(); 
-    // t = t+1;
-    // oldPrice = this.price; 
-    // this.updatePrice();
+    this.canvasEl.width = 600;
+    this.canvasEl.height = 500;
+    chartHeight = this.canvasEl.height;
+    chartWidth = this.canvasEl.width;
+    xMax = chartWidth - (margin.left + margin.right);
+    yMax = chartHeight - (margin.top + margin.bottom);
+    ratio = yMax / maxYValue;
+    this.cx.fillRect(margin.left, margin.top, xMax - margin.left, yMax - margin.top);
+    this.renderText(chartHeight, chartWidth, margin, yMax, xMax, this.data);
+    this.renderLinesAndLabels(chartHeight, chartWidth, margin, yMax, xMax, this.data, maxYValue, ratio);
+    this.renderData(xMax, this.data,margin,maxYValue,ratio);
+    this.cx.fillStyle = 'black';
+    // this.cx.fillStyle = "white";
+    // this.cx.fillRect(0, 0, 600, 500);
+    // this.cx.strokeStyle = "red";
+  }
 
 
+  renderText(chartHeight, chartWidth, margin, yMax, xMax, data) {
+    var labelFont = (data.labelFont != null) ? data.labelFont : '20pt Arial';
+    this.cx.font = labelFont;
+    this.cx.textAlign = "center";
 
-    // var myBarchart = new this.Barchart(
-    //   { 
+    //Title
+    var txtSize = this.cx.measureText(data.title);
+    this.cx.fillText(data.title, (chartWidth / 2), (margin.top / 2));
 
-    //     canvas:canvasEl,
-    //     seriesName:"Vinyl records",
-    //     padding:20,
-    //     gridScale:5,
-    //     gridColor:"#eeeeee",
-    //     data:this.myVinyls,
-    //     colors:["#a55ca5","#67b6c7", "#bccd7a","#eb9743"],
-    //     obj:this
-    //   }
-    // );
-    // myBarchart.draw();
+    //X-axis text
+    txtSize = this.cx.measureText(data.xLabel);
+    this.cx.fillText(data.xLabel, margin.left + (xMax / 2) - (txtSize.width / 2), yMax + (margin.bottom / 1.2));
+
+    //Y-axis text
+    this.cx.save();
+    this.cx.rotate(-Math.PI / 2);
+    this.cx.font = labelFont;
+    this.cx.fillText(data.yLabel, (yMax / 2) * -1, margin.left / 4);
+    this.cx.restore();
+  }
+  renderLinesAndLabels(chartHeight, chartWidth, margin, yMax, xMax, data, maxYValue, ratio) {
+    var yInc = yMax / data.dataPoints.length;
+    var yPos = 0;
+    var yLabelInc = (maxYValue * ratio) / data.dataPoints.length;
+    var xInc = this.getXInc(xMax, data);
+    var xPos = margin.left;
+    for (var i = 0; i < data.dataPoints.length; i++) {
+      yPos += (i == 0) ? margin.top : yInc;
+      //Draw horizontal lines
+      this.drawLine(margin.left, yPos, xMax, yPos, '#fff');
+
+      //y axis labels
+      this.cx.font = (data.dataPointFont != null) ? data.dataPointFont : '10pt Calibri';
+      var txt = Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)).toString();
+      var txtSize = this.cx.measureText(txt);
+      this.cx.fillText(txt, margin.left - ((txtSize.width >= 14) ? txtSize.width : 10) - 7, yPos + 4);
+      console.log(txt);
+      //x axis labels
+      txt = data.dataPoints[i].x;
+      txtSize = this.cx.measureText(txt);
+    
+      this.cx.fillText(txt, xPos, yMax + (margin.bottom / 3));
+      xPos += xInc;
+    }
 
   }
 
-  // drawLine(ctx, startX, startY, endX, endY, color) {
-  //   ctx.save();
-  //   ctx.strokeStyle = color;
-  //   ctx.beginPath();
-  //   ctx.moveTo(startX, startY);
-  //   ctx.lineTo(endX, endY);
-  //   ctx.stroke();
-  //   ctx.restore();
-  // }
-  // drawBar(ctx, upperLeftCornerX, upperLeftCornerY, width, height, color) {
-  //   ctx.save();
-  //   ctx.fillStyle = color;
-  //   ctx.fillRect(upperLeftCornerX, upperLeftCornerY, width, height);
-  //   ctx.restore();
-  // }
+  renderData(xMax, data,margin,maxYValue,ratio){
+    var xInc = this.getXInc(xMax, data);
+    var prevX = 0,
+        prevY = 0;
+        for (var i = 0; i < data.dataPoints.length; i++) {
+          var pt = data.dataPoints[i];
+          var ptY = (maxYValue - pt.y) * ratio;
+          if (ptY < margin.top) ptY = margin.top;
+          var ptX = (i * xInc) + margin.left;
+  
+          if (i > 0) {
+            //Draw connecting lines
+           this.drawLine(ptX, ptY, prevX, prevY, '#fff', 2);
+          }
+
+        }
+  }
+  drawLine(startX?, startY?, endX?, endY?, strokeStyle?, lineWidth?) {
+    if (strokeStyle != null) this.cx.strokeStyle = strokeStyle;
+    if (lineWidth != null) this.cx.lineWidth = lineWidth;
+    this.cx.beginPath();
+    this.cx.moveTo(startX, startY);
+    this.cx.lineTo(endX, endY);
+    this.cx.stroke();
+    this.cx.closePath();
+  }
+  getMaxDataYValue(data, maxYValue) {
+    for (var i = 0; i < data.dataPoints.length; i++) {
+      if (data.dataPoints[i].y > maxYValue) maxYValue = data.dataPoints[i].y;
+    }
+  };
+  getXInc(xMax, data) {
+    return Math.round(xMax / data.dataPoints.length) - 1;
+  };
 
 
-  // Barchart = function (options) {
-  //   this.options = options;
-  //   this.canvas = options.canvas;
-  //   this.ctx = this.canvas.getContext("2d");
-  //   this.ctx.fillText(this.options.seriesName, this.canvas.width / 2, this.canvas.height);
-  //   // console.log(this.ctx);
-  //   this.colors = options.colors;
 
-  //   this.draw = function () {
-  //     var maxValue = 0;
-  //     for (var categ in this.options.data) {
-  //       maxValue = Math.max(maxValue, this.options.data[categ]);
-  //     }
-  //     var canvasActualHeight = this.canvas.height - this.options.padding * 2;
-  //     var canvasActualWidth = this.canvas.width - this.options.padding * 2;
-
-  //     //drawing the grid lines
-  //     var gridValue = 0;
-  //     while (gridValue <= maxValue) {
-  //       var gridY = canvasActualHeight * (1 - gridValue / maxValue) + this.options.padding;
-  //       this.options.obj.drawLine(
-  //         this.ctx,
-  //         0,
-  //         gridY,
-  //         this.canvas.width,
-  //         gridY,
-  //         this.options.gridColor
-  //       );
-
-  //       //writing grid markers
-  //       this.ctx.save();
-  //       this.ctx.fillStyle = this.options.gridColor;
-  //       this.ctx.font = "bold 10px Arial";
-  //       this.ctx.fillText(gridValue, 10, gridY - 2);
-  //       this.ctx.restore();
-
-  //       gridValue += this.options.gridScale;
-  //     }
-
-  //     //drawing the bars
-  //     var barIndex = 0;
-  //     var numberOfBars = Object.keys(this.options.data).length;
-  //     var barSize = (canvasActualWidth) / numberOfBars;
-
-  //     for (categ in this.options.data) {
-  //       var val = this.options.data[categ];
-  //       var barHeight = Math.round(canvasActualHeight * val / maxValue);
-  //       this.options.obj.drawBar(
-  //         this.ctx,
-  //         this.options.padding + barIndex * barSize,
-  //         this.canvas.height - barHeight - this.options.padding,
-  //         barSize,
-  //         barHeight,
-  //         this.colors[barIndex % this.colors.length]
-  //       );
-
-  //       barIndex++;
-  //     }
-
-  //   }
-  // }
 
 }
