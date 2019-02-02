@@ -100,14 +100,7 @@ export class TableComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes["columns"]) {
-
-
-
-    }
-    if (changes["rows"]) {
-
-    }
+    
   }
 
   sortData(property, changeDirection) {

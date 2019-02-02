@@ -1,5 +1,4 @@
 import { Routes, RouterModule } from '@angular/router';
-import { CanvasGraphComponent } from './canvas-graph/canvas-graph.component';
 import { CanvasJsComponent } from './canvas-js/canvas-js.component';
 import { TableComponent } from './table/table.component';
 import { HomeComponent } from './home/home.component';

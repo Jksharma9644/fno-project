@@ -4,7 +4,6 @@ import {FormsModule} from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { TableComponent } from './table/table.component';
-import { CanvasGraphComponent } from './canvas-graph/canvas-graph.component';
 import { Angular2CsvModule } from 'angular2-csv';
 import { CanvasJsComponent } from './canvas-js/canvas-js.component';
 import {routing} from './routes';
@@ -14,7 +13,6 @@ import { HomeComponent } from './home/home.component';
   declarations: [
     AppComponent,
     TableComponent,
-    CanvasGraphComponent,
     CanvasJsComponent,
     HomeComponent,
     

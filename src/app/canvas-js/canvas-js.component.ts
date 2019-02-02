@@ -18,7 +18,7 @@ export class CanvasJsComponent implements OnInit {
 
 
   ngOnInit() {
-    this.getRandomInt();
+    // this.getRandomInt();
 
 
     this.CanvasChart = this.getChartConfig();
@@ -27,13 +27,13 @@ export class CanvasJsComponent implements OnInit {
       xLabel: 'Time ',
       yLabel: 'Value',
       renderTypes: [this.CanvasChart.renderType.lines],
-      dataPoints: [{ x: '1', y: 0 }, { x: 2, y: 82 },
-      { x: '3', y: 85 },
-      { x: '4', y: 92 },
-      { x: '5', y: 80 },
-      { x: '6', y: 96 },
-      { x: '7', y: 81 },
-      { x: '8', y: 93 },
+      dataPoints: [{ x: '1', y: 60 }, { x: 2, y: 82 },
+      { x: '3', y: 82.5 },
+      { x: '4', y: 83.5 },
+      { x: '5', y: 83.56 },
+      { x: '6', y: 84.56 },
+      { x: '7', y: 90 },
+      { x: '8', y: 92.5 },
       { x: '9', y: 100 },
       { x: '10', y: 89 }]
     };
@@ -54,7 +54,7 @@ export class CanvasJsComponent implements OnInit {
 
       this.canvasEl = canvasId.nativeElement;
       this.cx = this.canvasEl.getContext('2d');
-      this.canvasEl.width = 600;
+      this.canvasEl.width = 1000;
       this.canvasEl.height = 500;
       chartHeight = this.canvasEl.height;
       chartWidth = this.canvasEl.width;
@@ -179,10 +179,16 @@ export class CanvasJsComponent implements OnInit {
     var getRandomInt = () => {
       // var time = 1;
 
+
+      
+
+    
       var length=  this.dataDef.dataPoints.length;
+      var i=length-1;
       console.log(this.dataDef.dataPoints[length-1].x);
       var time= parseInt(this.dataDef.dataPoints[length-1].x);
       setInterval(() => {
+    
         var min = Math.ceil(80);
         var max = Math.floor(100);
         console.log();
@@ -192,8 +198,14 @@ export class CanvasJsComponent implements OnInit {
         }
         time = time + 1;
         this.dataDef.dataPoints.push(data);
-        drawLine(this.ptX, this.ptY, this.prevX,this. prevY, '#fff', 2)
-      })
+       
+        var xInc = getXInc();
+        this.ptX = (i * xInc) + margin.left;
+        this.ptY=  (maxYValue - data.y) * ratio;
+        i++;
+        drawLine(this.ptX, this.ptY, this.prevX,this. prevY, '#fff', 2);
+       
+      },1000)
     }
 
     var getXInc = function () {
@@ -202,7 +214,7 @@ export class CanvasJsComponent implements OnInit {
 
 
     var drawLine = function (startX?, startY?, endX?, endY?, strokeStyle?, lineWidth?) {
-      console.log(startX);
+      console.log(startX,startY);
       if (strokeStyle != null) ctx.strokeStyle = strokeStyle;
       if (lineWidth != null) ctx.lineWidth = lineWidth;
       ctx.beginPath();
@@ -218,21 +230,7 @@ export class CanvasJsComponent implements OnInit {
     };
 
   }
-  getRandomInt() {
-    var time = 1;
-    setInterval(() => {
-      var min = Math.ceil(80);
-      var max = Math.floor(100);
-      console.log();
-      var data = {
-        x: time,
-        y: Math.floor(Math.random() * (max - min + 1)) + min
-      }
-      time = time + 1;
-      this.dataDef.dataPoints.push(data);
-
-    },10000)
-  }
+  // 
 
 
 }
