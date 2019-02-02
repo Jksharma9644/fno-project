@@ -1,4 +1,12 @@
 
-<!-- <app-table tableName="Nutrient" [columns]="columns"  [rows]="rows"></app-table> -->
-
-<app-canvas-graph></app-canvas-graph>
+<!-- <app-canvas-graph></app-canvas-graph> -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      <a class="nav-item nav-link active" routerLink="/home">Table</a>
+      <a class="nav-item nav-link" routerLink="/canvas">Canvas</a>
+    </div>
+  </div>
+</nav>
+<router-outlet></router-outlet>
+<!-- <app-canvas-js></app-canvas-js> -->

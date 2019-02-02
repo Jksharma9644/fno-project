@@ -21,9 +21,7 @@ export class CanvasGraphComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.price=20;
-    
-   
+    this.price=200;
   }
 
 
@@ -39,16 +37,22 @@ export class CanvasGraphComponent implements OnInit {
       }
      
      
-      var t=0;
-      var oldPrice = this.price; 
+      var t=10;
+      var oldPrice;
+      if(!oldPrice)
+      oldPrice = this.price; 
+      this.cx.save();
       this.cx.beginPath();
-      this.cx.moveTo(t, oldPrice);;
-      this.cx.lineTo(t+1, this.price); 
+      this.cx.moveTo(t,400-oldPrice);;
+      this.cx.lineTo(t+10, 400-this.price); 
       this.cx.stroke();
       this.cx.closePath(); 
+      this.cx.restore();
       t = t+1;
       oldPrice = this.price; 
-    },10)
+      // console.log(oldPrice,this.price);
+      
+    },1000)
    ;
    
     // var timer= setInterval(this.updatePrice, 10); 
@@ -58,11 +62,11 @@ export class CanvasGraphComponent implements OnInit {
   ngAfterViewInit(): void {
     this.canvasEl = this.canvas.nativeElement;
     this.cx = this.canvasEl.getContext('2d');
-    this.canvasEl.width = 400;
+    this.canvasEl.width = 500;
     this.canvasEl.height = 400;
-    this.cx.fillStyle="black";
-    this.cx.fillRect(0, 0, 600, 300); 
-    this.cx.strokeStyle="white";
+    this.cx.fillStyle="white";
+    this.cx.fillRect(0, 0, 500, 400); 
+    this.cx.strokeStyle="red";
     this.updatePrice();
     // const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     // this.cx = canvasEl.getContext('2d');

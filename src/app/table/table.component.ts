@@ -84,7 +84,7 @@ export class TableComponent implements OnInit {
       }
     }
 
-    console.log(this.noarray);
+    // console.log(this.noarray);
   }
 
 
@@ -93,7 +93,7 @@ export class TableComponent implements OnInit {
     var length = this.pageDetails.noPerPage;
     this.firstPage = page_no * length - length;
     this.lastpage = page_no * length;
-    console.log(this.firstPage, this.lastpage)
+    // console.log(this.firstPage, this.lastpage)
     this.newRows = this.rows.slice(this.firstPage, this.lastpage);
     console.log(this.rows)
     // console.log(this.pageDetails);
