@@ -149,7 +149,7 @@ export class CanvasTimeSeriesComponent implements OnInit {
   ngAfterViewInit(){
     this.setChartDimension();
     this.setBackgroundDimension();
-      this.setTitle();
+    this.setTitle();
     this.renderLinesAndLabels();
     this.renderChartData();
     this.getRandomInt();
