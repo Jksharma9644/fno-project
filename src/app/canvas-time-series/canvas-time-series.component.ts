@@ -28,7 +28,7 @@ export class CanvasTimeSeriesComponent implements OnInit {
 
   graphObject = {
     title: "Time Series Graph",
-    xLabel: 'Time ',
+    xLabel: 'Time in Secs',
     yLabel: 'Value',
     data: []
   }
@@ -61,14 +61,26 @@ export class CanvasTimeSeriesComponent implements OnInit {
   setTitle() {
     this.cx.font = '20pt Arial';
     this.cx.textAlign = 'center';
-    var txtSIZE = this.cx.measureText(this.graphObject.title);
-    console.log
-    this.cx.fillText(this.graphObject.xLabel, this.margin.left + (this.xMax / 2) - (txtSIZE.width / 2), this.yMax + (this.margin.bottom / 1.2));
-    this.cx.save();
-    this.cx.rotate(-Math.PI / 2);
-    this.cx.font = '20pt Arial';
-    this.cx.fillText(this.graphObject.yLabel, (this.yMax / 2) * -1, this.margin.left / 4);
-    this.cx.restore();
+
+    //Title
+    var txtSize = this.cx.measureText(this.graphObject.title);
+    this.cx.fillText(this.graphObject.title, (this.chartWidth / 2), (this.margin.top / 2));
+    
+      //X-axis text
+      txtSize =  this.cx.measureText(this.graphObject.xLabel);
+      this.cx.fillText(this.graphObject.xLabel, this.margin.left + (this.xMax / 2) - (txtSize.width / 2), this.yMax + (this.margin.bottom / 1.2));
+      
+      
+      
+      //Y-axis text
+
+
+    
+      this.cx.save();
+      this.cx.rotate(-Math.PI / 2);
+      this.cx.font = '20pt Arial';
+      this.cx.fillText(this.graphObject.yLabel, (this.yMax / 2) * -1, this.margin.left / 4);
+      this.cx.restore();
   }
   renderLinesAndLabels() {
     this.yInc = this.yMax / this.graphObject.data.length;
@@ -77,10 +89,11 @@ export class CanvasTimeSeriesComponent implements OnInit {
     this.xPos = this.margin.left;
     for (var i = 0; i < this.graphObject.data.length; i++) {
       this.yPos += (i == 0) ? this.margin.top : this.yInc;
+      // console.log( this.yPos);
       this.cx.font = '10pt Calibri';
       var txt = Math.round(this.maxYValue - ((i == 0) ? 0 : this.yPos / this.ratio)).toString() ;
       var txtSize = this.cx.measureText(txt);
-      console.log("value",txt);
+      // console.log("value",txt);
       this.cx.fillText(txt, this.margin.left - ((txtSize.width >= 14) ? txtSize.width : 10) - 7, this.yPos + 4);
       //x axis labels
       txt = this.graphObject.data[i].x;
@@ -94,8 +107,6 @@ export class CanvasTimeSeriesComponent implements OnInit {
   }
   renderChartData() {
     this.xInc = this.getXInc();
-    this.prevX = 0,
-      this.prevY = 0;
     for (var i = 0; i < this.graphObject.data.length; i++) {
       var pt = this.graphObject.data[i];
       var ptY = (this.maxYValue - pt.y) * this.ratio;
@@ -158,9 +169,8 @@ export class CanvasTimeSeriesComponent implements OnInit {
     var length=  this.graphObject.data.length;
     var i=length-1;
     // console.log(this.dataDef.dataPoints[length-1].x);
-    
+    var time= parseInt( this.graphObject.data[length-1].x);
     setInterval(() => {
-      var time= parseInt( this.graphObject.data[length-1].x);
       var min = Math.ceil(80);
       var max = Math.floor(100);
       var data = {
