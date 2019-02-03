@@ -5,7 +5,6 @@ import {FormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TableComponent } from './table/table.component';
 import { Angular2CsvModule } from 'angular2-csv';
-import { CanvasJsComponent } from './canvas-js/canvas-js.component';
 import {routing} from './routes';
 import { HomeComponent } from './home/home.component';
 import { CanvasTimeSeriesComponent } from './canvas-time-series/canvas-time-series.component';
@@ -14,7 +13,6 @@ import { CanvasTimeSeriesComponent } from './canvas-time-series/canvas-time-seri
   declarations: [
     AppComponent,
     TableComponent,
-    CanvasJsComponent,
     HomeComponent,
     CanvasTimeSeriesComponent,
     
