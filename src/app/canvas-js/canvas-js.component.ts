@@ -54,7 +54,7 @@ export class CanvasJsComponent implements OnInit {
 
       this.canvasEl = canvasId.nativeElement;
       this.cx = this.canvasEl.getContext('2d');
-      this.canvasEl.width = 1000;
+      this.canvasEl.width = 600;
       this.canvasEl.height = 500;
       chartHeight = this.canvasEl.height;
       chartWidth = this.canvasEl.width;
@@ -178,11 +178,6 @@ export class CanvasJsComponent implements OnInit {
 
     var getRandomInt = () => {
       // var time = 1;
-
-
-      
-
-    
       var length=  this.dataDef.dataPoints.length;
       var i=length-1;
       // console.log(this.dataDef.dataPoints[length-1].x);
@@ -207,7 +202,7 @@ export class CanvasJsComponent implements OnInit {
         // drawLine(this.ptX, this.ptY, this.prevX,this. prevY, '#fff', 2);
         this.CanvasChart.render(this.canvas, this.dataDef);
        
-      },10000)
+      },1000)
     }
 
     var getXInc = function () {

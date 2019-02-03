@@ -8,6 +8,7 @@ import { Angular2CsvModule } from 'angular2-csv';
 import { CanvasJsComponent } from './canvas-js/canvas-js.component';
 import {routing} from './routes';
 import { HomeComponent } from './home/home.component';
+import { CanvasTimeSeriesComponent } from './canvas-time-series/canvas-time-series.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { HomeComponent } from './home/home.component';
     TableComponent,
     CanvasJsComponent,
     HomeComponent,
+    CanvasTimeSeriesComponent,
     
   ],
   imports: [
