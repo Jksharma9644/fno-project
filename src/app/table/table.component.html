@@ -20,13 +20,13 @@
             <!-- <thead> -->
               <tr>
                 
-                <th  *ngFor="let col of columns" ><a><span (click)="sortData(col,'true')"><i  [ngClass]="{ 'fa fa-arrow-up':sort.column === col.col && !sort.descending , 'fa fa-arrow-down':sort.column === col.col && sort.descending}" ></i>{{col.colname}}</span><input type="checkbox" [(ngModel)]="col.ischecked" (change)="checkValue(col)" /></a>
+                <th  *ngFor="let col of columns" ><a><span (click)="sortData(col,'true',rows)"><i  [ngClass]="{ 'fa fa-arrow-up':sort.column === col.col && !sort.descending , 'fa fa-arrow-down':sort.column === col.col && sort.descending}" ></i>{{col.colname}}</span><input type="checkbox" [(ngModel)]="col.ischecked" (change)="checkValue(col)" /></a>
                 <!-- {{sort.column}}{{col.col}} {{sort.descending}}</th> -->
               </tr>
             <!-- </thead> -->
             <tbody>
               <tr *ngFor="let item of newRows">
-                <th >{{item.desert}}</th>
+                <td >{{item.desert}}</td>
                 <td >{{item.calories}}</td>
                 <td>{{item.fat}}</td>
                 <td>{{item.carbs}}</td>

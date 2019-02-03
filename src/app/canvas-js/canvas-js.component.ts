@@ -27,7 +27,7 @@ export class CanvasJsComponent implements OnInit {
       xLabel: 'Time ',
       yLabel: 'Value',
       renderTypes: [this.CanvasChart.renderType.lines],
-      dataPoints: [{ x: '1', y: 60 }, { x: 2, y: 82 },
+      dataPoints: [{ x: '1', y: 85 }, { x: 2, y: 82 },
       { x: '3', y: 82.5 },
       { x: '4', y: 83.5 },
       { x: '5', y: 83.56 },
@@ -42,7 +42,7 @@ export class CanvasJsComponent implements OnInit {
 
   getChartConfig() {
     var ctx;
-    var margin = { top: 40, left: 75, right: 0, bottom: 75 };
+    var margin = { top:40, left: 75, right: 0, bottom: 75 };
     var chartHeight, chartWidth, yMax, xMax, data;
     var maxYValue = 0;
     var ratio = 0;
@@ -82,7 +82,7 @@ export class CanvasJsComponent implements OnInit {
 
     var getMaxDataYValue = function () {
       for (var i = 0; i < data.dataPoints.length; i++) {
-        if (data.dataPoints[i].y > maxYValue) maxYValue = data.dataPoints[i].y;
+        if (data.dataPoints[i].y > maxYValue) maxYValue = data.dataPoints[i].y+10;
       }
     };
 
@@ -185,7 +185,7 @@ export class CanvasJsComponent implements OnInit {
     
       var length=  this.dataDef.dataPoints.length;
       var i=length-1;
-      console.log(this.dataDef.dataPoints[length-1].x);
+      // console.log(this.dataDef.dataPoints[length-1].x);
       var time= parseInt(this.dataDef.dataPoints[length-1].x);
       setInterval(() => {
     
@@ -197,15 +197,17 @@ export class CanvasJsComponent implements OnInit {
           y: Math.floor(Math.random() * (max - min + 1)) + min
         }
         time = time + 1;
+        this.dataDef.dataPoints.splice(0,1);
         this.dataDef.dataPoints.push(data);
        
         var xInc = getXInc();
         this.ptX = (i * xInc) + margin.left;
         this.ptY=  (maxYValue - data.y) * ratio;
         i++;
-        drawLine(this.ptX, this.ptY, this.prevX,this. prevY, '#fff', 2);
+        // drawLine(this.ptX, this.ptY, this.prevX,this. prevY, '#fff', 2);
+        this.CanvasChart.render(this.canvas, this.dataDef);
        
-      },1000)
+      },10000)
     }
 
     var getXInc = function () {

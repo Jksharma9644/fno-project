@@ -64,7 +64,7 @@ export class TableComponent implements OnInit {
       removeNewLines: true,
       keys: this.keys
     };
-    // this.sortData(this.columns[0], 'false')
+    this.sortData(this.columns[0], 'false',this.newRows);
     this.firstPage = 1;
     this.pageDetails.totalcount = this.rows.length;
     this.findMultipleofCount(this.pageDetails.totalcount);
@@ -95,7 +95,6 @@ export class TableComponent implements OnInit {
     this.lastpage = page_no * length;
     // console.log(this.firstPage, this.lastpage)
     this.newRows = this.rows.slice(this.firstPage, this.lastpage);
-    console.log(this.rows)
     // console.log(this.pageDetails);
   }
 
@@ -103,14 +102,13 @@ export class TableComponent implements OnInit {
     
   }
 
-  sortData(property, changeDirection) {
+  sortData(property, changeDirection,rowarray) {
     if (changeDirection === 'true') {
       this.isDesc = !this.isDesc;  //change the direction
     }
     // this.column = property;
     let direction = this.isDesc ? 1 : -1;
-
-    this.rows.sort((a, b) => {
+    rowarray.sort((a, b) => {
       // //console.log(this.data[a][property] < this.data[b][property])
       if (a[property.col] < b[property.col]) {
         return -1 * direction;
@@ -134,6 +132,8 @@ export class TableComponent implements OnInit {
 
   checkValue(col) {
     col.ischecked = !col.ischecked;
+    
+
   }
   onOptionsSelected(event) {
     console.log(event);
